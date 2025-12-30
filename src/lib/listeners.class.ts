@@ -8,12 +8,12 @@ import {
   ListenersAdapter,
 } from "@typedly/listeners";
 /**
- * @description
+ * @description The concrete class for managing a collection of listeners.
  * @export
  * @class Listeners
- * @template {any[]} G 
- * @template {ListenerFunction<G>} [L=ListenerFunction<G>] 
- * @extends {ListenersBase<G, L>}
+ * @template {any[]} G The arguments passed to listeners.
+ * @template {ListenerFunction<G>} [L=ListenerFunction<G>] The listener function type.
+ * @extends {ListenersBase<G, L>} Base listeners class.
  */
 export class Listeners<
   G extends any[],
