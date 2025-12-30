@@ -18,8 +18,9 @@ A **lightweight** TypeScript library for managing listeners.
 
 ## Features
 
-- **Collection**: The package build on top of `@typescript-package/collection`.
-- **Listener**: Adding simple function to listeners to call on emit.
+- **Collection**: The package build on top of [`@typescript-package/collection`](https://github.com/typescript-package/collection).
+- **Listeners**: Managing simple function as listeners using a collection-based API.
+- **Listeners emitter**: The extension of `Listeners` class to emit the listeners asynchronously or synchronously depending on the `R` parameter.
 - **Base abstraction**: Extends collection base abstraction with additional `once` and `snapshot`  functionality.
 - **Concrete implementation**: Provides ready-to-use concrete class for initializing and using listener collections out of the box.
 
@@ -31,6 +32,7 @@ A **lightweight** TypeScript library for managing listeners.
     - [`ListenersBase`](#listenersbase)
   - Concrete
     - [`Listeners`](#listeners)
+    - [`ListenersEmitter`](#listenersemitter)
 - [Contributing](#contributing)
 - [Support](#support)
 - [Code of Conduct](code-of-conduct)
@@ -55,25 +57,95 @@ import {
   // Abstract.
   ListenersBase,
   // Concrete.
-  Listeners
+  Listeners,
+  ListenersEmitter
 } from '@typescript-package/listeners';
 ```
 
+### Abstract
+
 ### `ListenersBase`
+
+The base class for managing a collection of listeners.
 
 ```typescript
 import { ListenersBase } from '@typescript-package/listeners';
 ```
 
-[`ListenersBase`](https://)
+[`ListenersBase`](https://github.com/typescript-package/listeners/blob/main/src/lib/listeners.base.ts)
+
+### Concrete
 
 ### `Listeners`
+
+The concrete class for managing a collection of listeners.
 
 ```typescript
 import { Listeners } from '@typescript-package/listeners';
 ```
 
-[`Listeners`](https://)
+[`Listeners`](https://github.com/typescript-package/listeners/blob/main/src/lib/listeners.class.ts)
+
+### `ListenersEmitter`
+
+The concrete class for emitting a collection of listeners.
+
+```typescript
+import { ListenersEmitter } from '@typescript-package/listeners';
+import { SetAdapter } from "@typescript-package/collection-adapter";
+import { ListenerFunction } from "@typedly/listeners";
+
+// Create the adapter based om `SetAdapter`.
+export class ListenersSetAdapter<
+  G extends any[],
+  L extends ListenerFunction<G>,
+> extends SetAdapter<L> {
+  public once(...listeners: L[]): this {
+    listeners.forEach(listener => {
+      if (this.has(listener)) {
+        throw new Error('Listener already exists in the collection.');
+      }
+
+      const onceListener = (...args: G) => (
+        this.delete(onceListener as L),
+        listener(...args)
+      );
+
+      this.add(onceListener as L)
+
+    });
+    return this;
+  }
+
+  public snapshot(): L[] {
+    return Array.from(this.value);
+  }
+}
+
+// Initialize.
+const listenersEmitter = new ListenersEmitter(false, ListenersSetAdapter, (msg: string) => {
+  console.log(`Listener 1: ${msg}`);
+});
+
+// Add the listener.
+listenersEmitter.add((msg: string) => {
+  console.log(`Listener 2: ${msg}`);
+});
+
+// Add the listener emitted once.
+listenersEmitter.once((msg: string) => {
+  console.log(`Once Listener: ${msg}`);
+});
+
+// Emit listeners.
+listenersEmitter.emit('Hello, World!');
+
+const snapshot = listenersEmitter.snapshot();
+console.log(`Snapshot has ${snapshot.length} listeners.`);
+
+```
+
+[`ListenersEmitter`](https://github.com/typescript-package/listeners/blob/main/src/lib/listeners-emitter.class.ts)
 
 ## Contributing
 
