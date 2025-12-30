@@ -6,5 +6,6 @@ export {
   // Abstract.
   ListenersBase,
   // Concrete.
-  Listeners
+  Listeners,
+  ListenersEmitter
 } from './lib';
