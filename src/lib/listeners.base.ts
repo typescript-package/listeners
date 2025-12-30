@@ -14,12 +14,13 @@ import {
  * @export
  * @abstract
  * @class ListenersBase
- * @template {any[]} G 
- * @template {ListenerFunction<G>} L 
- * @template T 
- * @template {boolean} R 
- * @template {CollectionAdapter<L, T, R>} A 
- * @extends {CollectionBase<L, T, R, A>}
+ * @template {any[]} G Arguments passed to listeners.
+ * @template {ListenerFunction<G>} L Listener function type.
+ * @template T The type of the underlying collection.
+ * @template {boolean} R Whether the listeners are asynchronous.
+ * @template {ListenersAdapter<G, L, T, R>} A The adapter type for managing the collection.
+ * @extends {CollectionBase<L, T, R, A>} Base collection class.
+ * @implements {ListenersShape<G, L, T, R>}
  */
 export abstract class ListenersBase<
   G extends any[],
@@ -50,8 +51,8 @@ export abstract class ListenersBase<
    * @param {L} listener 
    * @returns {this} 
    */
-  public once(...listener: L[]): AsyncReturn<R, this> {
-    return super.asyncReturn(this.adapter.once(...listener));
+  public once(...listeners: L[]): AsyncReturn<R, this> {
+    return super.asyncReturn(this.adapter.once(...listeners));
   }
 
   /**
