@@ -1,6 +1,6 @@
 {
   "name": "@typescript-package/listeners",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "wwwdev.io <dev@wwwdev.io>",
   "description": "A lightweight TypeScript library for managing listeners.",
   "license": "MIT",
@@ -9,8 +9,8 @@
     "registry": "https://registry.npmjs.org"
   },
   "peerDependencies": {
-    "@typedly/listeners": "^2.0.0",
-    "@typescript-package/collection": "^0.2.1"
+    "@typedly/listeners": "^3.0.0",
+    "@typescript-package/collection": "^1.0.0"
   },
   "scripts": {
     "prepublishOnly": "npm run pkg && npm run clean",
@@ -34,6 +34,26 @@
     {
       "type": "stripe",
       "url": "https://donate.stripe.com/dR614hfDZcJE3wAcMM"
+    },
+    {
+      "type": "Donorbox",
+      "url": "https://donorbox.org/become-a-sponsor-to-the-angular-package?default_interval=once&amount=1"
+    },
+    {
+      "type": "Open Collective",
+      "url": "https://opencollective.com/sterblack"
+    },
+    {
+      "type": "Ko-fi",
+      "url": "https://ko-fi.com/sterblack"
+    },
+    {
+      "type": "4Fund",
+      "url": "https://4fund.com/bruubs"
+    },
+    {
+      "type": "paypal",
+      "url": "https://paypal.me/sterblack"
     },
     {
       "type": "individual",

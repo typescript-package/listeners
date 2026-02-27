@@ -11,17 +11,20 @@ import {
  * @description The concrete class for managing a collection of listeners.
  * @export
  * @class Listeners
- * @template {any[]} G The arguments passed to listeners.
- * @template {ListenerFunction<G>} [L=ListenerFunction<G>] The listener function type.
- * @extends {ListenersBase<G, L>} Base listeners class.
+ * @template {ListenersAdapter<G, L, T, R>} A The adapter type for managing the collection.
+ * @template {ListenerFunction<G>} [L=A extends ListenersAdapter<any, infer U, any, any> ? U : never] The type of listener functions, inferred from the adapter if not explicitly provided.
+ * @template {any[]} [G=L extends ListenerFunction<infer V> ? V : never] The arguments passed to listeners, inferred from the listener function type if not explicitly provided.
+ * @template [T=A extends ListenersAdapter<G, L, infer U, any> ? U : never] The type of the underlying collection, inferred from the adapter if not explicitly provided.
+ * @template {boolean} [R=A extends ListenersAdapter<G, L, any, infer V> ? V : never] Indicates if the listeners are asynchronous, inferred from the adapter if not explicitly provided.
+ * @extends {ListenersBase<A, L, G, T, R>}
  */
 export class Listeners<
-  G extends any[],
-  L extends ListenerFunction<G>,
-  T,
-  R extends boolean,
-  A extends ListenersAdapter<G, L, T, R>
->extends ListenersBase<G, L, T, R, A> {
+  A extends ListenersAdapter<G, L, T, R>,
+  L extends ListenerFunction<G> = A extends ListenersAdapter<any, infer U, any, any> ? U : never,
+  G extends any[] = L extends ListenerFunction<infer V> ? V : never,
+  T = A extends ListenersAdapter<G, L, infer U, any> ? U : never,
+  R extends boolean = A extends ListenersAdapter<G, L, any, infer V> ? V : never
+> extends ListenersBase<A, L, G, T, R> {
   /**
    * @description The toStringTag of the Listeners class.
    * @public
