@@ -12,7 +12,7 @@ import { AsyncReturn } from '@typedly/data';
  * @template T The type of the collection.
  * @template {boolean} R Indicates if the execution is asynchronous.
  * @template {ListenersAdapter<G, L, T, R>} A The adapter type for managing the collection.
- * @extends {ListenersBase<G, L, T, R, A>}
+ * @extends {ListenersBase<A, L, G, T, R>}
  */
 export class ListenersEmitter<
   G extends any[],
@@ -20,13 +20,7 @@ export class ListenersEmitter<
   T,
   R extends boolean,
   A extends ListenersAdapter<G, L, T, R>
-> extends ListenersBase<G, L, T, R, A> {
-  /**
-   * @description The parameter to switch between synchronous and asynchronous execution.
-   * @type {R}
-   */
-  #async: R;
-
+> extends ListenersBase<A, L, G, T, R> {
   /**
    * Creates an instance of `ListenersEmitter`.
    * @constructor
@@ -40,7 +34,6 @@ export class ListenersEmitter<
     ...listeners: L[]
   ) {
     super(async, adapter, ...listeners);
-    this.#async = async;
   }
 
   /**
@@ -50,11 +43,11 @@ export class ListenersEmitter<
    * @returns {AsyncReturn<R, this>} The current instance or a promise resolving to it.
    */
   public emit(...args: G): AsyncReturn<R, this> {
-    return (this.#async === true)
+    return (super.async === true)
       ? (this.snapshot() as AsyncReturn<true, L[]>)
         .then(listeners => Promise.all(listeners.map(listener => listener(...args))))
         .then(() => this) as AsyncReturn<R, this>
       : this.forEach(listener => listener(...args)),
-        super.asyncReturn(this);
+        super.returnThis(this);
   }
 }
