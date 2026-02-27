@@ -1,5 +1,5 @@
 // Class.
-import { CollectionBase, HybridCollection } from '@typescript-package/collection';
+import { HybridCollection } from '@typescript-package/collection';
 // Interface,
 import { AsyncReturn } from '@typedly/data';
 import {
